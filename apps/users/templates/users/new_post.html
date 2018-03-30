@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>New Post</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <a href="/dashboard"><div class="logo"></div></a>
+            <div class="right-links">
+                <a href="/dashboard">Home</a>
+                <strong><a href="/posts/new" class="new-post">New Post</a></strong>
+                <a href="/users/{{user.id}}">@{{user.username}}</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        {% if messages %} {% for message in messages %}
+        <div class="error">- {{message}}</div>
+        {% endfor %} {% endif %}
+        <h1>Create a New Post</h1>
+        <form action='/posts/create' method='POST'>
+            {% csrf_token %}
+            <div>
+                <div>
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" id="title">
+                </div>
+                <div>
+                    <label for="type">Type:</label>
+                    <select name="type">
+                        <option value="1">Lyrics</option>
+                        <option value="2">Poetry</option>
+                        <option value="3">Prose</option>
+                        <option value="3">Short Story</option>
+                    </select>
+                </div>
+                <p>Inspiration:</p>
+                <p class="hint">Tell other writers about the inspiration behind this post, 
+                        and what you're hoping to achieve.</p>
+                <textarea name="inspiration" class="inspiration"></textarea>
+                <p for="content">Content:</p>
+                <textarea name="content" class="content"></textarea>
+                
+            </div>
+            <input type="submit" value="Create">
+        </form>
+    </div>
+</body>
+</html>

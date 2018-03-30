@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>{{item.name}}</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <a href="/dashboard">
+                <div class="logo"></div>
+            </a>
+            <div class="right-links">
+                <a href="/dashboard">Home</a>
+                <a href="/posts/new" class="new-post">New Post</a>
+                <a href="/users/{{user.id}}">@{{user.username}}</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div>
+            <div class="column left">
+                <div class="post">
+                    <div class="post-header">
+                        <h1>{{post.title}}</h1>
+                        {% if post in user.starred_posts.all %}
+                        <form action="/posts/unstar" method="post" class="star-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="pid" value="{{post.id}}">
+                            <input type="submit" class="star" value="&#x2605;">
+                            <span class="star-number">{{post.starred_by.count}}</span>
+                        </form>
+                        {% else %}
+                        <form action="/posts/star" method="post" class="star-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="pid" value="{{post.id}}">
+                            <input type="submit" class="star" value="&#x2606;">
+                            <span class="star-number">{{post.starred_by.count}}</span>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <div class="byline">By
+                        <a href="/users/{{user.id}}">@{{post.owner.username}}</a>
+                    </div>
+                    <div class="content">
+                        <p>{{post_version.content | linebreaks}}</p>
+                    </div>
+                </div>
+                <!-- Contributions -->
+
+                {% if post.owner.id != user.id %}
+                <h3>Make a Contribution</h3>
+                <p class="hint">
+                    <a href="/users/{{post.owner.id}}">@{{post.owner.username}}</a> will review your Contribution
+                and either approve or reject it. </p>
+                <form action="/posts/{{post.id}}/contribute" method="post">
+                    {% csrf_token %}
+                    <textarea name="content" class="content"></textarea>
+                    <input type="submit" value="Contribute">
+                </form>
+                {% endif %}
+                <div class="pending">
+                    <h3>Pending submissions for this post:</h3>
+                    {% if post.owner.id == user.id %} 
+                        {% if owner_pending_versions %} 
+                            {% for version in owner_pending_versions %}
+                    <div class="version post">
+                        <p class="user">
+                            <a href="/users/{{version.author.id}}">@{{version.author.username}}</a>
+                        </p>
+                        on
+                        <span class="time">{{version.created_at}}</span>
+                        <p>{{version.content | linebreaks}}</p>
+                        <div class="approve-reject">
+                            <form action="/posts/v/approve" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="vid" value="{{version.id}}">
+                                <input type="submit" value="Approve" class="green-button">
+                            </form>
+                            <form action="/posts/v/reject" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="vid" value="{{version.id}}">
+                                <input type="submit" value="Reject">
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %} {% else %}
+                    <p>None.</p>
+                    {% endif %} {% else %} {% if user_pending_versions %} {% for version in user_pending_versions %}
+                    <div class="post">
+                    <p class="time">{{version.created_at}}</p>
+                    <p>{{version.content | linebreaks}}</p>
+                    </div>
+                    {% endfor %} {% else %}
+                    <p>None.</p>
+                    {% endif %} {% endif %}
+                </div>
+
+                <h3>Comments</h3>
+                {% if post.comments %}
+                    {% for comment in post.comments.all %}
+                    <div class="post comment">
+                        <a href="/users/{{comment.author.id}}">@{{comment.author.username}}</a> on
+                        {{comment.created_at}} <span class="red">said:</span>
+                        <p>{{comment.content}}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>None.</p>
+                {% endif %}
+                <h3>Leave a Comment</h3>
+                <form action="/posts/comment" method="post" >
+                    {% csrf_token %}
+                    <input type="hidden" name="pid" value="{{post.id}}">
+                    <textarea name="comment"></textarea>
+                    <input type="submit" value="Comment">
+                </form>
+
+
+
+
+            </div>
+
+            <div class="column right">
+                <form action="/posts/{{post.id}}/edit">
+                    {% csrf_token %}
+                    <input type="hidden" name="pid" value="{{post.id}}">
+                    <input type="submit" value="Edit Post">
+                </form>
+                <br>
+                <div class="post">
+                    <p>Inspiration:</p>
+                    <div class="inspiration">{{post.inspiration}}</div>
+                </div>
+                <div class="post">
+                <p>Evolution:</p>
+                {% for version in post.versions.all %}
+                <!-- TODO: show only approved; if user is owner, show drafts for approval/rejection -->
+                {% if version.state == 2 %}
+                <div>
+                    -
+                    <a href="/posts/{{post.id}}/v/{{version.id}}">
+                        {% if post.versions.first.id == version.id %} Seed {% else %} Grow {% endif %}
+                    </a>
+                    by
+                    <a href="/users/{{version.author.id}}">@{{version.author.username}}</a>
+                    <p class="hint">on {{version.updated_at}}</p>
+                </div>
+                {% endif %} {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

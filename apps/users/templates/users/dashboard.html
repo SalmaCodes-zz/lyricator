@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>Home | Lyricator </title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <a href="/dashboard"><div class="logo"></div></a>
+            <div class="right-links">
+                <strong><a href="/dashboard">Home</a></strong>
+                <a href="/posts/new" class="new-post">New Post</a>
+                <a href="/users/{{user.id}}">@{{user.username}}</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="dashboard-links">
+            <h3 class="red">Popular Posts</h3>
+            &MediumSpace;&MediumSpace;&MediumSpace;
+            <a href="/dashboard/recent"><h3>Recent Posts</h3></a>
+        </div>
+        {% for post in popular_posts %}
+        <div class="post">
+            <h2><a href="/posts/{{post.id}}">{{post.title}}</a></h2>
+            <p class="small">
+                By <a href="/users/{{post.owner.id}}">@{{post.owner.username}}</a>
+            </p>
+            <p><strong>Inspiration:</strong> <span class="inspiration">{{post.inspiration}}</span></p>
+            <p>&#x2605; : {{post.starred_by.count}} &nbsp;&nbsp;&nbsp;<strong>Contribtions</strong>: {{post.versions.count}}</p>
+            <p>
+                Type : 
+                    {% if post.type == 1 %}
+                Lyrics
+                {% elif post.type == 2 %}
+                Poem
+                {% elif post.type == 3 %}
+                Prose
+                {% elif post.type == 4 %}
+                Short Story
+                {% endif %}
+            </p>
+            <p class="time">Created On {{ post.created_at }}</p>
+            <p class="time">Last Updated On {{post.updated_at}}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

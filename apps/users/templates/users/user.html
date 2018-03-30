@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>{{item.name}}</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <a href="/dashboard"><div class="logo"></div></a>
+            <div class="right-links">
+                <a href="/dashboard">Home</a>
+                <a href="/posts/new" class="new-post">New Post</a>
+                {% if request.session.user_id == user.id %}
+                    <strong><a href="/users/{{current_user.id}}">@{{current_user.username}}</a></strong>
+                {% else %}
+                    <a href="/users/{{current_user.id}}">@{{current_user.username}}</a>
+                {% endif %}
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <h3>{{user.first_name}}'s Posts</h3>
+
+        {% for post in user.posts.all %}
+        <div class="post">
+            <h2><a href="/posts/{{post.id}}">{{post.title}}</a></h2>
+            <p class="small">
+                By <a href="/users/{{post.owner.id}}">@{{post.owner.username}}</a></p>
+            <p>Created On <span class="time">{{ post.created_at }}</span></p>
+            <p>Last Updated On <span class="time">{{post.updated_at}}</span></p>
+            <p>&#x2605; : {{post.starred_by.count}}</p>
+            <p>Contribtions : {{post.versions.count}}</p>
+            <p>
+                Type : 
+                    {% if post.type == 1 %}
+                Lyrics
+                {% elif post.type == 2 %}
+                Poem
+                {% elif post.type == 3 %}
+                Prose
+                {% elif post.type == 4 %}
+                Short Story
+                {% endif %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

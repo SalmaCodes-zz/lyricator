@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>{{item.name}}</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <a href="/dashboard">
+                <div class="logo"></div>
+            </a>
+            <div class="right-links">
+                <a href="/dashboard">Home</a>
+                <a href="/posts/new" class="new-post">New Post</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div>
+            <div class="column left">
+                
+                <form action="/posts/edit" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="pid" value="{{post.id}}">
+                    <div class="post">
+                        <p>Edit Title:</p>
+                        <input type="text" name="title" value="{{post.title}}">
+                        <p>Edit Content:</p>
+                        <div class="content">
+                            <textarea name="content">{{post_version.content}}</textarea>
+                        </div>
+                    </div>
+                    <input type="submit" value="Edit Post">
+                </form>
+                <form action="/posts/{{post.id}}">
+                    <input class="green-button" type="submit" value="Cancel">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

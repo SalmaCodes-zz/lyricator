@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"> 
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>Login/Registration</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        {% if messages %} {% for message in messages %}
+        <div class="error">- {{message}}</div>
+        {% endfor %} {% endif %}
+        <div>
+            <div class="center">
+                <h1 class="red welcome">Welcome to</h1>
+                <div class="logo big"></div>
+                <h2 class="gray">A Collaboration Platform for <span class="underline">Creative Writers</span></h2>
+            </div>
+            <div class="columns">
+                <div class="column" id="registration">
+                    <h1>Registration</h1>
+                    <form action='/process' method='POST'>
+                        {% csrf_token %}
+                        <input type="hidden" name="type" value="register">
+                        <div>
+                            <label for="first_name">First Name:</label>
+                            <input type="text" name="first_name" id="first_name">
+                        </div>
+                        <div>
+                            <label for="last_name">Last Name:</label>
+                            <input type="text" name="last_name" id="last_name">
+                        </div>
+                        <div>
+                            <label for="username">Username:</label>
+                            <input type="text" name="username" id="username">
+                        </div>
+                        <div>
+                            <label for="password">Password:</label>
+                            <input type="password" name="password" id="password">
+                        </div>
+                        <div>
+                            <label for="password_confirmation">Confirm PW:</label>
+                            <input type="password" name="password_confirmation" id="password_confirmation">
+                        </div>
+                        <div>
+                            <label for="birth_date">Birthday:</label>
+                            <input type="date" name="birth_date" id="birth_date" required>
+                        </div>
+                        <input type="submit" value="Register">
+                    </form>
+                </div>
+                <div class="column" id="login">
+                    <h1>Login</h1>
+                    <form action='/process' method='POST'>
+                        {% csrf_token %}
+                        <input type="hidden" name="type" value="login">
+                        <div>
+                            <label for="username">Username:</label>
+                            <input type="text" name="username" id="username">
+                        </div>
+                        <div>
+                            <label for="password">Password:</label>
+                            <input type="password" name="password" id="password">
+                        </div>
+                        <input type="submit" value="Login">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
