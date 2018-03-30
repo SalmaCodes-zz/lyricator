@@ -155,8 +155,9 @@ def show_post_version(request, id, vid):
 # '/posts/v/approve': POST method to approve a version.
 def approve_version(request):
     if request.method == 'POST':
-        last_version = Version.objects.filter(state=2).last()
-        version = Version.objects.get(id=request.POST['vid'])
+        vid = request.POST['vid']
+        version = Version.objects.get(id=vid)
+        last_version = Version.objects.filter(post=version.post, state=2).last()
         version.content = last_version.content + '\n' + version.content
         version.state = 2
         version.save()

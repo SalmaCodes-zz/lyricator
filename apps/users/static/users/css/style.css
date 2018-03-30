@@ -10,7 +10,7 @@ body {
 #wrapper {
     width: 960px;
     margin: 0 auto;
-    padding-top: 20px;
+    padding: 20px 0;
 }
 .logo {
     background: url("../images/logo.png") no-repeat;
@@ -133,9 +133,6 @@ input[type="submit"] {
     vertical-align: top;
 }
 /* Post */
-.column.right .post {
-    /* margin-left: 20px; */
-}
 .approve-reject form {
     display: inline-block;
     margin-right: 20px;
@@ -200,6 +197,9 @@ input[type="submit"].star {
 }
 .column.left {
     width: 620px;
+}
+.column.right {
+    width: 270px;
 }
 .column#registration {
     border-right: 1px solid lightgray;

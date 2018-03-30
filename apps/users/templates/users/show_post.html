@@ -125,12 +125,14 @@
             </div>
 
             <div class="column right">
+                {% if post.owner.id == user.id %}
                 <form action="/posts/{{post.id}}/edit">
                     {% csrf_token %}
                     <input type="hidden" name="pid" value="{{post.id}}">
                     <input type="submit" value="Edit Post">
                 </form>
                 <br>
+                {% endif %}
                 <div class="post">
                     <p>Inspiration:</p>
                     <div class="inspiration">{{post.inspiration}}</div>
